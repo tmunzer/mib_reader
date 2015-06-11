@@ -61,11 +61,11 @@ OidObject.prototype.getOrigin = function () {
 };
 
 OidObject.prototype.getRow = function () {
-    var ds = '<tr class="oid_row">'
+    var ds = '<tr class="oid_row" id="oid_' + this.getOid() + '">'
         + '<td class="oid_column_button">';
     if (this.childs.length > 0) {
         ds += '<a class="btn btn-default btn-sm oid_tree_button"  onclick="display_next(\'' + this.getOid() + '\')" >'
-            + '<i id="i_' + this.getOid() + '" class="fa fa-chevron-circle-right fa-lg"></i>'
+            + '<i id="i_' + this.getOid() + '" class="fa fa-plus-circle fa-lg"></i>'
             + '</a></td>';
     } else {
         ds += '<a class="btn btn-default btn-sm oid_tree_button" disabled="">'
@@ -74,14 +74,18 @@ OidObject.prototype.getRow = function () {
     }
     if (this.parameters) {
         ds += '<td class="oid_tree_data">' + this.getOid() + '</br>'
-            + '<strong>Name:</strong><span class="oid_name"> ' + this.getName() + '</span></br>';
+            + '<strong>Name:</strong><span class="oid_name"> ' + this.getName() + '</span></br>'
+            + '<strong> MIB: </strong>'
+            + '<a href="#" onclick="goTo(\'display_detail\', \'' + this.mib.mib_name + '\')">' + this.mib.mib_name
+            + ' <i class="fa fa-external-link"></i></a><br>';
         if (this.parameters.syntax.getType() != "") {
             var syntax_type = this.parameters.syntax.getType();
             var syntax = $.grep(convention_list, function (e) {
                 return e.getName() == syntax_type;
             });
             if (syntax.length > 0) {
-                ds += '<strong>Syntax: </strong><a onclick="display_detail(\'TEXTUAL-CONVENTION\', \'' + syntax[0].getName() + '\')" class="btn oid_syntax menu-link">' + this.parameters.syntax.getType() + '</a></br>';
+                ds += '<strong>Syntax: </strong><a href="#a" onclick="display_detail(\'TEXTUAL-CONVENTION\', \'' + syntax[0].getName() + '\')" class="oid_syntax">'
+                    + this.parameters.syntax.getType() + ' <i class="fa fa-info-circle"></i></a></br>';
             } else {
                 ds += '<strong>Syntax: </strong><span>' + this.parameters.syntax.getType() + '</span></br>';
                 if (this.parameters.syntax.getValues().length > 0){
@@ -112,14 +116,44 @@ OidObject.prototype.getRow = function () {
     return ds;
 };
 
-OidObject.prototype.search_result = function (text) {
+OidObject.prototype.search_result = function (text, search_all, search_oid, search_name, search_syntax, search_index, search_description) {
     var re;
+    var oid = this.getOid();
+    var oid_name = this.getName();
+    if (this.parameters) {
+        var oid_syntax = this.parameters.syntax.getType();
+        var oid_index = this.parameters.getIndex();
+        var oid_description = this.parameters.getDescription();
+    } else {
+        var oid_syntax = "";
+        var oid_index = "";
+        var oid_description = "";
+    }
     var re_text = text.replace(" ", "|");
     re = new RegExp('(' + re_text + ')', "gi");
-    var oid = this.getOid().replace(re, "<strong>$1</strong>");
-    var oid_name = this.getName().replace(re, "<strong>$1</strong>");
-    var ds = "<article style='padding-top:0;'><h5>"
-        + oid + ': <span class="oid_name"> ' + oid_name + ' </span>';
+
+    if (search_all || search_oid){
+        oid = oid.replace(re, "<strong>$1</strong>");
+    }
+    if (search_all || search_name){
+        oid_name = oid_name.replace(re, "<strong>$1</strong>");
+    }
+    if (search_all ||search_syntax){
+        oid_syntax = oid_syntax.replace(re, "<strong>$1</strong>");
+    }
+    if (search_all || search_index){
+        oid_index = oid_index.replace(re, "<strong>$1</strong>");
+    }
+    if (search_all || search_description){
+        oid_description = oid_description.replace(re, "<strong>$1</strong>");
+    }
+
+    var ds = "<article style='padding-top:0;'>"
+        + '<h5>'
+        + '<a href="#" onclick="goTo(\'display_preview\', \'oid_' + this.getOid() + '\')" class="oid_name"> ' + oid_name + ' <i class="fa fa-external-link"></i></a>'
+        + '</h5>'
+        + 'OID: ' + oid + '<br>'
+        + 'MIB: <a href="#" onclick="goTo(\'display_detail\', \'' + this.mib.mib_name + '\')">' + this.mib.mib_name + ' <i class="fa fa-external-link"></i></a><br>';
     if (this.parameters) {
         if (this.parameters.syntax.getType() != "") {
             var syntax_type = this.parameters.syntax.getType();
@@ -127,14 +161,16 @@ OidObject.prototype.search_result = function (text) {
                 return e.getName() == syntax_type;
             });
             if (syntax.length > 0) {
-                var oid_syntax = this.parameters.syntax.getType().replace(re, "<strong>$1</strong>");
-                ds += ' (<a onclick="display_detail(\'TEXTUAL-CONVENTION\', \'' + syntax[0].getName() + '\')" class="btn oid_syntax">' + oid_syntax + '</a>)</h5>';
+                ds += 'Syntax: <a href="#" onclick="display_detail(\'TEXTUAL-CONVENTION\', \'' + syntax[0].getName() + '\')" class="btn oid_syntax">'
+                    + oid_syntax + ' <i class="fa fa-info-circle"></i></a><br>';
             } else {
-                ds += ' (<span>' + this.parameters.syntax.getType() + '</span>)</h5>';
+                ds += 'Syntax: <span>' + oid_syntax + '</span><br>';
             }
         }
-        var oid_description = this.parameters.getDescription().replace(re, "<strong>$1</strong>");
-        ds += '<span class="oid_description"> ' + oid_description + '</span>';
+        if (this.parameters.getIndex() != "") {
+            ds += '<strong>Index:</strong><span class="oid_index"> ' + this.parameters.getIndex() + '</span></br>';
+        }
+        ds += '<hr><span class="oid_description"> ' + oid_description + '</span>';
     }
     ds += '</article>\n';
     return ds;

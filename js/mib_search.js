@@ -3,29 +3,39 @@ function SearchEngine() {
     this.oid_search_object_description = [];
     this.oid_search_syntax_name = [];
     this.oid_search_oid = [];
+    this.search_all = true;
+    this.search_oid = true;
+    this.search_name = true;
+    this.search_syntax = true;
+    this.search_index = true;
+    this.search_description = true;
 }
 
+SearchEngine.prototype.searchFields = function (search_all, search_oid, search_name, search_syntax, search_index, search_description) {
+    this.search_all = search_all;
+    this.search_oid = search_oid;
+    this.search_name = search_name;
+    this.search_syntax = search_syntax;
+    this.search_index = search_index;
+    this.search_description = search_description;
+};
 
-SearchEngine.prototype.search_mib = function (text) {
-    var result = [];
+SearchEngine.prototype.searchMib = function (text) {
+    var result = new Array();
     var score = 0;
     var oid_object;
     var text_splitted = text.split(' ');
-    for (var i in text_splitted) {
-        if (text_splitted.hasOwnProperty(i)) {
-            for (var j in oid_list) {
-                if (oid_list.hasOwnProperty(j)) {
-                    score = 0;
-                    oid_object = oid_list[j];
-                    score = this.search_oid_object(text_splitted[i].trim(), oid_object);
-                    if (score > 0) {
-                        if (result.hasOwnProperty(oid_object)) {
-                            result[oid_object.getOid()] = result[oid_object.getOid()] + score;
-                        } else {
-                            result[oid_object.getOid()] = score;
-                        }
-                    }
+    for (var i in oid_list){
+        if (oid_list.hasOwnProperty(i)){
+            score = 0;
+            oid_object = oid_list[i];
+            for (var j in text_splitted){
+                if (text_splitted.hasOwnProperty(j)){
+                    score += this.searchOidObject(text_splitted[j].trim(), oid_object);
                 }
+            }
+            if (score > 0){
+                result.push({oid: oid_object.getOid(), score: score});
             }
         }
     }
@@ -62,28 +72,49 @@ SearchEngine.prototype.add_oid_object = function (oid_object) {
     }
 };
 
-SearchEngine.prototype.search_oid_object = function (text, oid_object) {
+SearchEngine.prototype.searchOidObject = function (text, oid_object) {
     var score = 0;
     var re = new RegExp(text, 'i');
-    if (oid_object.getOid().indexOf(text) >= 0) {
-        score += 10;
+    var re_strict = new RegExp("(?:^| )"+text+"(?: |$)", 'i');
+    if (this.search_all || this.search_oid){
+        if (oid_object.getOid() == text) {
+            score += 15;
+        } else if (oid_object.getOid().indexOf(text) >= 0) {
+            score += 10;
+        }
     }
-    if (re.test(oid_object.getName())) {
-        score += 5;
+    if (this.search_all || this.search_name){
+        if (re_strict.test(oid_object.getName())){
+            score += 15;
+        } else if (re.test(oid_object.getName())) {
+            score += 10;
+        }
     }
     if (oid_object.getParam()) {
-        if (re.test(oid_object.getParam().syntax.getType())) {
-            score += 3;
+        if (this.search_all || this.search_syntax){
+            if (re.test(oid_object.getParam().syntax.getType())) {
+                score += 3;
+            }
         }
-        if (re.test(oid_object.getParam().getStatus())) {
-            score += 2;
+
+        if (this.search_all || this.search_description){
+            if (re_strict.test(oid_object.getParam().getDescription())){
+                score += 6;
+            }
+            else if (re.test(oid_object.getParam().getDescription())) {
+                score += 4;
+            }
         }
-        if (re.test(oid_object.getParam().getDescription())) {
-            score += 4;
+        if (this.search_all || this.search_index){
+            if (re.test(oid_object.getParam().getIndex())) {
+                score += 3;
+            }
         }
-        if (re.test(oid_object.getParam().getIndex())) {
-            score += 3;
-        }
+        //TODO
+//        if (re.test(oid_object.getParam().getStatus())) {
+//            score += 2;
+//        }
+
     }
     return score;
 };

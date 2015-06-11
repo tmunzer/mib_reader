@@ -1,6 +1,7 @@
 function Syntax() {
     this.stype = "";
     this.values = [];
+    this.mib = "";
 }
 Syntax.prototype.setType = function (stype){
     this.stype = stype;
@@ -14,3 +15,9 @@ Syntax.prototype.setValues = function(values){
 Syntax.prototype.getValues = function (){
     return this.values;
 };
+Syntax.prototype.setMib = function (mib) {
+    this.mib = mib;
+}
+Syntax.prototype.getMib = function () {
+    return this.mib;
+}

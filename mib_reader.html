@@ -11,6 +11,7 @@
     <script type='text/javascript' src='js/lib/jquery-2.1.1.min.js'></script>
     <script type='text/javascript' src='js/lib/bootstrap.min.js'></script>
     <script type='text/javascript' src='js/lib/slidebars.js'></script>
+    <script type='text/javascript' src='js/lib/jquery.autocomplete.js'></script>
     <link rel="stylesheet" href="./css/slidebars.css" type="text/css">
     <link rel="stylesheet" href="./css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css">
@@ -52,48 +53,67 @@
                 </a>
             </li>
             <li>
-                <a id="top-arrow" href="#top">^</a>
+                <a id="top-arrow" href="#top">^
+                    <span> Top</span>
+                </a>
             </li>
         </ul>
     </div>
 </nav>
 <div style="min-height: 536px;" id="sb-site">
     <section class="sb-site-content" id="mib_display_select">
-        <article>
-            Select MIB files:
-            <input type="file" id="fileInput" multiple>
-            <input type="button" id="clear_mib_selection" value="Clear">
+        <article style="display: flex;">
+            <div style="width: 40%">
+                <span style="margin-left: 5px;">Select MIB files:</span>
+                <input style="margin-top: 5px;" type="file" id="fileInput" multiple>
+            </div>
+            <div style="width: 40%">
+                <span style="margin-left: 5px;" id="entries_number">0</span> OID(s) loaded<br>
+                <input style="margin-top: 5px;" type="button" id="clear_mib_selection" value="Clear">
+            </div>
         </article>
     </section>
     <section class="sb-site-content" id="mib_display_detail" hidden="hidden">
-        <h3>MIBs Details</h3>
         <div id="mib_details">
         </div>
     </section>
     <section class="sb-site-content" id="mib_display_preview">
-        <h3>MIBs Preview - <span id="entries_number">0</span> OID(s) loaded</h3>
-        <a href="#" onclick="show_all()" style="float:right"><i class="fa fa-expand"></i> Show all </a><br>
-        <a href="#" onclick="hide_all()" style="float:right"><i class="fa fa-compress"></i> Hide all </a>
+        <article style="display: flex">
+            <div style="width: 50%;">
+                <a href="#" onclick="goTo('display_preview', 'oid_'+$('#autocomplete').val());">
+                    <i class="fa fa-search fa-lg"></i>
+                </a>
+                <input type="text" name="goto_oid" id="autocomplete" placeholder="Go to OID number" class="search"
+                       onkeypress="return enterKey(event)"/>
+            </div>
+            <div style="width: 45%; padding-top: 5px">
+                <a href="#" onclick="show_all()" style="margin: 5px 10px 5px 10px"><i class="fa fa-expand"></i> Show all
+                </a>
+                <a href="#" onclick="hide_all()" style="margin: 5px 10px 5px 10px"><i class="fa fa-compress"></i> Hide
+                    all </a>
+            </div>
+        </article>
         <div id="mib_preview">
         </div>
     </section>
     <section class="sb-site-content" id="mib_about" hidden="hidden">
         <article>
             <h3>About</h3>
+            v0.92:
+            <ul>
+                <li>parser fixes</li>
+                <li>research tool fixes</li>
+                <li>research tool improvements</li>
+                <li>new "Go To OID" feature</li>
+                <li>new cross links</li>
+                <li>UI improvements</li>
+            </ul>
             v0.91:
             <ul>
-                <li>
-                    fix issues on the research tool
-                </li>
-                <li>
-                    fix issues on hide/display mib preview
-                </li>
-                <li>
-                    fix parser issues
-                </li>
-                <li>
-                    improve UI
-                </li>
+                <li>parser fixes</li>
+                <li>research tool fixes</li>
+                <li>mib preview hide/display fixes</li>
+                <li>UI improvements</li>
             </ul>
             v0.9:
             <ul>
@@ -102,15 +122,33 @@
         </article>
     </section>
     <section class="sb-site-content" id="mib_display_search" hidden="hidden">
-        <article>
-            <a href="#" onclick="display_mib_search()">
-                <i class="fa fa-search fa-lg"></i>
-            </a>
-            <input type="text" size="100%" placeholder="Search" id='search_text' onkeypress="return enterKey(event)"/>
-
+        <article style="display: flex">
+            <div style="width: 50%;">
+                <a href="#" onclick="display_mib_search()">
+                    <i class="fa fa-search fa-lg"></i>
+                </a>
+                <input type="text" size="60" placeholder="Search" id='search_text' class="search"
+                       onkeypress="return enterKey(event)"/>
+            </div>
+            <div style="width: 45%; padding-top: 5px">
+                <label><input type="checkbox" name="search_fields_all" id="scbox_all" checked=""/> All</label>
+                <label class="search_fields_label disabled"><input type="checkbox" class="search_fields_box"
+                                                                   name="search_fields" id="scbox_oid" checked=""
+                                                                   disabled=""> OID</label>
+                <label class="search_fields_label disabled"><input type="checkbox" class="search_fields_box"
+                                                                   name="search_fields" id="scbox_name" checked=""
+                                                                   disabled=""/> Name</label>
+                <label class="search_fields_label disabled"><input type="checkbox" class="search_fields_box"
+                                                                   name="search_fields" id="scbox_syntax" checked=""
+                                                                   disabled=""/> Syntax</label>
+                <label class="search_fields_label disabled"><input type="checkbox" class="search_fields_box"
+                                                                   name="search_fields" id="scbox_index" checked=""
+                                                                   disabled=""/> Index</label>
+                <label class="search_fields_label disabled"><input type="checkbox" class="search_fields_box"
+                                                                   name="search_fields" id="scbox_desc" checked=""
+                                                                   disabled=""/> Description</label>
+            </div>
         </article>
-        <h3>Results</h3>
-
         <div id='mib_search'>
         </div>
     </section>
@@ -120,10 +158,10 @@
     <div id="info_details_content" style="margin-top: 100px;">
     </div>
     <div>
-    <a class='btn menu-link' id="sb-close" style='float: right; padding-right: 10px; padding-top: 10px;'>Close <i class='fa fa-times-circle'></i></a>
+        <a class='btn menu-link' id="sb-close" style='float: left; padding-right: 10px; padding-top: 10px;'>Close <i
+                class='fa fa-times-circle'></i></a>
     </div>
 </nav>
-<script type='text/javascript' src='js/mib_misc_obj.js'></script>
 <script type='text/javascript' src='js/mib_syntax.js'></script>
 <script type='text/javascript' src='js/mib_mib.js'></script>
 <script type='text/javascript' src='js/mib_oid.js'></script>
@@ -136,7 +174,9 @@
 <script>
     var mySlidebars = new $.slidebars();
 
+
     window.onload = function () {
+
         select_tab("display_preview");
         $('#fileInput').change(function (e) {
             var files = fileInput.files;
@@ -164,28 +204,43 @@
             $("#table_" + this.id).show();
 
         });
+
+        $('#scbox_all').change(function () {
+            if ($(this).is(":checked")) {
+                $(".search_fields_label").addClass("disabled");
+                $(".search_fields_box").attr('disabled', true);
+            } else {
+                $(".search_fields_label").removeClass("disabled");
+                $(".search_fields_box").attr('disabled', false);
+            }
+        });
     };
 
-    $(document).ready(function() {
-        $('#sb-close').on("click", function(){
+    $(document).ready(function () {
+        $('#sb-close').on("click", function () {
             mySlidebars.slidebars.close();
         })
     });
 
     function enterKey(e) {
         if (e.keyCode == 13) {
-            display_mib_search();
-            return false;
+            if (e.target.id == "search_text") {
+                display_mib_search();
+                return false;
+            } else if (e.target.id == "autocomplete") {
+                goTo('display_preview', 'oid_' + $('#autocomplete').val());
+                return false;
+            }
         }
     }
 
     function display_next(oid) {
-        if (document.getElementById("table_" + oid).style.display == "none") {
+     if (document.getElementById("table_" + oid).style.display == "none") {
             document.getElementById("table_" + oid).style.display = 'table';
-            document.getElementById("i_" + oid).className = "fa fa fa-chevron-circle-down fa-lg";
+            document.getElementById("i_" + oid).className = "fa fa fa-minus-circle fa-lg";
         } else {
             document.getElementById("table_" + oid).style.display = 'none';
-            document.getElementById("i_" + oid).className = "fa fa fa-chevron-circle-right fa-lg";
+            document.getElementById("i_" + oid).className = "fa fa fa-plus-circle fa-lg";
         }
     }
     function display_detail(mib_type, object_name) {
@@ -194,58 +249,65 @@
             var convention = $.grep(convention_list, function (e) {
                 return e.getName() == object_name;
             });
-            convention = convention[0];
-            ds = "<h4>" + convention.getName() + "</h4>"
-                    + "<strong>Type: </strong><br>TEXTUAL CONVENTION<hr>"
-                    + "<strong>Display Hint: </strong><br>" + convention.getHint() + "<hr>"
-                    + "<strong>Status: </strong><br>" + convention.getStatus() + "<hr>"
-                    + "<strong>Syntax: </strong><br>" + convention.syntax.getType() + "<br>";
-            if (convention.syntax.getValues().length > 0) {
-                ds += "<ul>";
-                for (var i in convention.syntax.getValues()) {
-                    if (convention.syntax.getValues().hasOwnProperty(i)) {
-                        ds += "<li>" + convention.syntax.getValues()[i] + "</li>";
-                    }
-                }
-            }
-            ds += "</ul><hr>";
-            ds += "<strong>Description: </strong><br>" + convention.getDescription()
-                    + "</div>";
+            ds = convention[0].display_details();
         }
-
         $("#info_details_content").html(ds).show();
-        if (mySlidebars.slidebars.active('right')){
-
+        if (mySlidebars.slidebars.active('right')) {
         }
         mySlidebars.slidebars.open('right');
     }
-    function hide_detail() {
-        $('#entry_detail').hide();
-    }
+
     var tabs = ["display_search", "display_preview", "display_detail", "about"];
     function select_tab(tab_name) {
+        mySlidebars.slidebars.close();
         if (tab_name.indexOf("display_") < 0) {
             $("#mib_display_select").hide();
         } else {
             $("#mib_display_select").show();
         }
         for (var i in tabs) {
-            if (tabs[i] == tab_name) {
-                $("#mib_" + tabs[i]).show();
-                document.getElementById("nav_" + tabs[i]).className = "nav_selected";
-            } else {
-                $("#mib_" + tabs[i]).hide();
-                document.getElementById("nav_" + tabs[i]).className = "";
+            if (tabs.hasOwnProperty(i)) {
+                if (tabs[i] == tab_name) {
+                    $("#mib_" + tabs[i]).show();
+                    document.getElementById("nav_" + tabs[i]).className = "nav_selected";
+                } else {
+                    $("#mib_" + tabs[i]).hide();
+                    document.getElementById("nav_" + tabs[i]).className = "";
+                }
             }
         }
+
     }
     function show_all() {
         $(".next_oid_table").show();
-        $(".oid_tree_button > i").removeClass("fa-chevron-circle-right").addClass("fa-chevron-circle-down");
+        $(".oid_tree_button > i").removeClass("fa-plus-circle").addClass("fa-minus-circle");
     }
     function hide_all() {
         $(".next_oid_table").hide();
-        $(".oid_tree_button > i").addClass("fa-chevron-circle-right").removeClass("fa-chevron-circle-down");
+        $(".oid_tree_button > i").addClass("fa-plus-circle").removeClass("fa-minus-circle");
+    }
+
+    function goTo(tab_name, selector) {
+        var target;
+        select_tab(tab_name);
+        if (tab_name == 'display_preview') {
+            var oid = /[0-9.]+$/.exec(selector)[0];
+            hide_all();
+            while (oid.indexOf('.') > 0){
+                oid = oid.substring(0, oid.lastIndexOf('.'));
+                target = $(document.getElementById('table_'+oid));
+                if (target.length) {
+                        document.getElementById("table_" + oid).style.display = 'table';
+                        document.getElementById("i_" + oid).className = "fa fa fa-minus-circle fa-lg";
+                }
+            }
+        }
+        target = $(document.getElementById(selector));
+        if (target.length) {
+            $('html, body').animate({
+                scrollTop: (target.offset().top - 50)
+            }, 500);
+        }
     }
 </script>
 </body>

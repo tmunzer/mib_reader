@@ -83,8 +83,8 @@ div .left {
 .sb-site-content article {
     margin: 10px auto 25px auto;
     background-color: #ffffff;
-    box-shadow: 1px 1px 12px #555;
-    padding: 5px;
+    box-shadow: 1px 1px 6px #999;
+    padding: 10px;
 }
 
 /* table */
@@ -136,7 +136,24 @@ th {
     background-color: #ffffff;
 }
 
-#search_text {
-    border: 0;
-    border-bottom: 1px;
+.search {
+    padding: 5px 5px 0px;
+    margin-bottom: 5px;
+    width: 90%;
+    border-width: 0px 0px 2px 0px;
+    border-color: #444444;
 }
+
+label  {
+    padding: 0px 15px 0px 5px;
+}
+label.disabled {
+    color: gray;
+}
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }

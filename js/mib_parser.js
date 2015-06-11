@@ -14,9 +14,9 @@ function MibParser(fname, text) {
                 this.parse_import();
             } else if (this.line.indexOf("MODULE-IDENTITY") > 0) {
                 this.parse_moduleIdentity();
-            } else if (/^END$/.test(this.line.trim())) {
-                break;
-            } else {
+//            } else if (/^END$/.test(this.line.trim())) {
+//                break;
+            } else if (!/^END$/.test(this.line.trim())){
                 var name = null;
                 if (/^\w*$/.test(this.line.trim())) {
                     name = this.line.trim();
@@ -70,9 +70,9 @@ MibParser.prototype.parse_import = function () {
         var imported_oid = [];
         var from_mib = "";
         while (true) {
-
+            var line_split = "";
             if (this.line.indexOf("FROM") > 0) {
-                var line_split = this.line.split('FROM')[0].split(',');
+                line_split = this.line.split('FROM')[0].split(',');
                 for (var i in line_split) {
                     if (line_split.hasOwnProperty(i)) {
                         if (!/^( )*$/.test(this.line.split('FROM')[0].split(',')[i].trim())) {
@@ -83,7 +83,7 @@ MibParser.prototype.parse_import = function () {
                 from_mib = this.line.split("FROM")[1].replace(";", "").trim();
                 break;
             } else {
-                var line_split = this.line.split(',');
+                line_split = this.line.split(',');
                 for (var j in line_split) {
                     if (line_split.hasOwnProperty(j)) {
                         if (!/^( )*$/.test(this.line.split('FROM')[0].split(',')[j].trim())) {
@@ -202,7 +202,7 @@ MibParser.prototype.parse_textualConvention = function () {
             break;
         }
     }
-    convention.mib = this.mib;
+    convention.setMib(this.mib);
     this.mib.textual_convetion.push(convention);
     convention_list.push(convention);
 };
@@ -212,8 +212,9 @@ MibParser.prototype.parse_syntax = function () {
     var stype = "";
     var values = [];
     if (this.line.indexOf('{') >= 0){
-        stype = this.line.replace('SYNTAX', "").replace('{', "").trim();
-        this.next_line();
+        this.line = this.line.replace("SYNTAX", "").trim();
+        stype = this.line.substring(0, this.line.indexOf('{')).trim();
+        this.line = this.line.substring(this.line.indexOf('{') + 1).trim();
         while (true){
             if (this.line.indexOf('}') < 0) {
                 if (/\w/.test(this.line)){
@@ -228,12 +229,12 @@ MibParser.prototype.parse_syntax = function () {
             }
         }
     } else {
-        stype = this.line.replace('SYNTAX', "").replace('{', "").trim();
+        stype = this.line.replace('SYNTAX', "").trim();
     }
     syntax.setType(stype);
     syntax.setValues(values);
     return syntax;
-}
+};
 
 MibParser.prototype.parse_objectIdentifier = function (name) {
     var oid_object = new OidObject();

@@ -30,6 +30,12 @@ TextualConvention.prototype.setDescription = function (odescription) {
 TextualConvention.prototype.getDescription = function () {
     return this.odescription;
 };
+TextualConvention.prototype.setMib = function (mib) {
+    this.mib = mib;
+}
+TextualConvention.prototype.getMib = function () {
+    return this.mib;
+}
 
 
 TextualConvention.prototype.display = function () {
@@ -47,8 +53,8 @@ TextualConvention.prototype.display = function () {
     if (this.parameters) {
         ds += '<td class="oid_tree_data">' + this.getOid() + '</br>'
             + '<strong>Name:</strong><span class="oid_name"> ' + this.getName() + '</span></br>';
-        if (this.parameters.getSyntax() != "") {
-            ds += '<strong>Syntax:</strong><span class="oid_syntax"> ' + this.parameters.getSyntax() + '</span></br>';
+        if (this.parameters.syntax.getType() != "") {
+            ds += '<strong>Syntax:</strong><span class="oid_syntax"> ' + this.parameters.syntax.getType() + '</span></br>';
         }
         if (this.parameters.getIndex() != "") {
             ds += '<strong>Name:</strong><span class="oid_index"> ' + this.parameters.getIndex() + '</span></br>';
@@ -59,10 +65,33 @@ TextualConvention.prototype.display = function () {
     }
     ds += '<table id="table_' + this.getOid() + '" hidden="hidden" class="table table-condensed next_oid_table" style="margin: 0px;">';
     for (var i in this.childs) {
-        ds += this.childs[i].getRow();
+        if (this.childs.hasOwnProperty(i)){
+            ds += this.childs[i].getRow();
+        }
     }
     ds += '</table>'
         + '</td>'
         + '</tr>\n';
+    return ds;
+};
+
+TextualConvention.prototype.display_details = function () {
+    var ds = "<h4>" + this.getName() + "</h4>"
+        + "<strong>Type: </strong><br>TEXTUAL CONVENTION<hr>"
+        + "<strong>MIB: </strong><br>" + this.getMib().mib_name + "<hr>"
+        + "<strong>Display Hint: </strong><br>" + this.getHint() + "<hr>"
+        + "<strong>Status: </strong><br>" + this.getStatus() + "<hr>"
+        + "<strong>Syntax: </strong><br>" + this.syntax.getType() + "<br>";
+    if (this.syntax.getValues().length > 0) {
+        ds += "<ul>";
+        for (var i in this.syntax.getValues()) {
+            if (this.syntax.getValues().hasOwnProperty(i)) {
+                ds += "<li>" + this.syntax.getValues()[i] + "</li>";
+            }
+        }
+    }
+    ds += "</ul><hr>";
+    ds += "<strong>Description: </strong><br>" + this.getDescription()
+        + "</div>";
     return ds;
 };

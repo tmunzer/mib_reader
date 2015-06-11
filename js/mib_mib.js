@@ -1,3 +1,8 @@
+function Import_mibs(import_name, mib) {
+    this.import_name = import_name;
+    this.mib = mib;
+}
+
 function Mib(fname) {
     this.file_name = fname;
     this.mib_name = "";
@@ -15,10 +20,10 @@ function Mib(fname) {
 }
 
 Mib.prototype.displayMibDetails = function () {
-    var ds = "<article><h4>" + this.file_name + "</h4>"
+    var ds = "<article id='" + this.mib_name + "'><h4>" + this.mib_name + "</h4>"
         + "<div style='display:flex;'>"
         + "<div style='width:50%'>"
-        + "<strong>MIB Name:</strong> " + this.mib_name + "</br>"
+        + "<strong>File :</strong> " + this.file_name + "</br>"
         + "<strong>Last Update:</strong> " + this.last_updated + "</br>"
         + "<strong>Organization:</strong> " + this.organization + "</br>"
         + "<strong>Description:</strong> " + this.mib_description + "</br>"
