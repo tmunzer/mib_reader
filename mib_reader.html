@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us" xml:lang="en-us" >
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+
+  <title>MIB Preview</title>
+  <!-- JQuery -->
+  <script type='text/javascript' src='js/jquery-2.1.1.min.js'></script>
+  <script type='text/javascript' src='js/bootstrap.min.js'></script>
+  <link rel="stylesheet" href="./css/font-awesome.min.css" type="text/css">
+  <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="./css/my.css" type="text/css">
+</head>
+<body id="top">
+  <nav class="navbar navbar-default navbar-fixed-top sb-slide" role="navigation">
+  <div class="container">
+    <!-- Logo -->
+    <div id="logo" class="navbar-left">
+      <a href="#">MIB Preview</a>
+    </div>
+    <!-- /#logo -->
+
+    <!-- Menu -->
+
+    <ul class="nav navbar-nav navbar-right">
+        <li id="nav_display_search">
+          <a href="#" onclick="select_tab('display_search')">
+            <i class="fa fa-search fa-lg"></i>
+            <span> MIB Search</span>
+          </a>
+        </li>
+        <li id="nav_display_preview">
+        <a href="#" onclick="select_tab('display_preview')">
+          <i class="fa fa-list fa-lg"></i>
+          <span> MIB Preview</span>
+        </a>
+      </li>
+      <li id="nav_display_detail">
+        <a href="#" onclick="select_tab('display_detail')">
+          <i class="fa fa-info-circle fa-lg"></i>
+          <span> MIB Details</span>
+        </a>
+      </li>
+      <li id="nav_about">
+        <a href="#" onclick="select_tab('about')">
+          <i class="fa fa-question fa-lg"></i>
+          <span> About</span>
+        </a>
+      </li>
+      <li>
+        <a id="top-arrow" href="#top">^</a>
+      </li>
+    </ul>
+  </div>
+  </nav>
+  <div style="min-height: 536px;" id="sb-site">
+    <section class="sb-site-content" id="mib_display_select">
+  		<article>
+  			Select MIB files:
+  			<input type="file" id="fileInput" multiple>
+        <input type="button" id="clear_mib_selection" value="Clear">
+  		</article>
+    </section>
+    <section class="sb-site-content" id="mib_display_detail" hidden="hidden">
+        <h3>MIBs Details</h3>
+        <div id="mib_details">
+        </div>
+    </section>
+    <section class="sb-site-content" id="mib_display_preview">
+      <h3>MIBs Preview - <span id="entries_number">0</span> OID(s) loaded</h3>
+      <a href="#" onclick="show_all()" style="float:right"><i class="fa fa-expand"></i> Show all </a></br>
+      <a href="#" onclick="hide_all()" style="float:right"><i class="fa fa-compress"></i> Hide all </a>
+      <div id="mib_preview">
+      </div>
+      <div id="entry_detail" hidden="hidden">
+      </div>
+    </section>
+    <section class="sb-site-content" id="mib_about" hidden="hidden">
+      ABOUT
+    </section>
+    <section class="sb-site-content" id="mib_display_search" hidden="hidden">
+      <article>
+        <input type="text" size=60 style="border-top:0px; border-left: Opx; border-right: Opx;" placeholder="Search"/>
+          <a href="#" onclick="display_mib_search()">
+            <i class="fa fa-search fa-lg"></i>
+          </a>
+      </article>
+      <h3>Results</h3>
+    </section>
+  </div>
+<script type='text/javascript' src='js/mib_mib.js'></script>
+<script type='text/javascript' src='js/mib_oid.js'></script>
+<script type='text/javascript' src='js/mib_convention.js'></script>
+<script type='text/javascript' src='js/mib_parser.js'></script>
+<script type='text/javascript' src='js/mib_reader.js'></script>
+<script type='text/javascript' src='js/mib_list.js'></script>
+
+<script>
+
+window.onload = function() {
+  select_tab("display_search");
+  $('#fileInput').change(function(e) {
+    var files = fileInput.files;
+    countdown = files.length;
+    if (files) {
+      for (var i=0, file; file=files[i]; i++) {
+        read_file(file, display_file);
+      }
+    } else {
+      alert("Failed to load files");
+    }
+
+  });
+
+  $("#clear_mib_selection").click(function(){
+    mib_list = [];
+    oid_list = [];
+    countdown = 0;
+    root = [];
+    $('#mib_details').empty();
+    $('#mib_preview').empty();
+  });
+
+  $('#mib_display_body').on('click', '.oid_tree', function() {
+    $("#table_"+this.id).show();
+
+  });
+}
+
+function display_next(oid){
+  if (document.getElementById("table_"+oid).hasAttribute("hidden")){
+  document.getElementById("table_"+oid).removeAttribute("hidden");
+  document.getElementById("i_"+oid).className = "fa fa fa-chevron-circle-down fa-lg";
+  } else {
+  document.getElementById("table_"+oid).setAttribute("hidden", "");
+  document.getElementById("i_"+oid).className = "fa fa fa-chevron-circle-right fa-lg";
+  }
+}
+function display_detail(mib_type, object_name){
+  var ds = "";
+  if (mib_type == "TEXTUAL-CONVENTION"){
+    var syntax = $.grep(convention_list, function(e){ return e.getName() == object_name; });
+    syntax = syntax[0];
+    ds = "<h4>TEXTUAL CONVENTION</h4>"
+    + "<a class='btn' onclick='hide_detail()' style='float: right; padding-right: 10px; padding-top: 10px;'>Close <i class='fa fa-times-circle'></i></a>"
+    + "<div style='display: flex;'>"
+    + "<div style='width:50%;'>"
+    + "<strong>Name: </strong>" + syntax.getName() + "</br>"
+    + "<strong>Display Hint: </strong>" + syntax.getHint() + "</br>"
+    + "<strong>Status: </strong>" + syntax.getStatus()
+    + "</div><div style='width:50%;'>"
+    + "<strong>Syntax: </strong>" + syntax.getSyntax() + "</br>"
+    + "<strong>Description: </strong>" + syntax.getDescription()
+    +"</div>";
+  }
+  $("#entry_detail").html(ds);
+  $("#entry_detail").show();
+}
+function hide_detail(){
+  $('#entry_detail').hide();
+}
+var tabs = ["display_search", "display_preview", "display_detail", "about"];
+function select_tab(tab_name){
+  if (tab_name.indexOf("display_")<0){
+    $("#mib_display_select").hide();
+  } else {
+    $("#mib_display_select").show();
+  }
+  for (var i in tabs){
+    if (tabs[i] == tab_name){
+      $("#mib_"+tabs[i]).show();
+      document.getElementById("nav_"+tabs[i]).className = "nav_selected";
+    } else {
+      $("#mib_"+tabs[i]).hide();
+      document.getElementById("nav_"+tabs[i]).className = "";
+    }
+  }
+}
+function show_all(){
+  $(".next_oid_table").show();
+  $(".oid_tree_button > i").removeClass("fa-chevron-circle-right");
+  $(".oid_tree_button > i").addClass("fa-chevron-circle-down");
+}
+function hide_all(){
+  $(".next_oid_table").hide();
+  $(".oid_tree_button > i").addClass("fa-chevron-circle-right");
+  $(".oid_tree_button > i").removeClass("fa-chevron-circle-down");
+}
+</script>
+</body>
+</html>

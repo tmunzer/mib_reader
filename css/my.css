@@ -1,0 +1,132 @@
+body {
+    font-family: Century Gothic;
+    background-color: #fafafa;
+}
+
+/*1. Top Nav bar */
+
+.navbar-fixed-top {
+    background-color: #0093D1;
+}
+
+.navbar-default .navbar-nav > li > a, #logo > a, a:focus{
+    text-decoration: none;
+    color: #000000;
+}
+.navbar-default .navbar-nav > li > a:hover {
+   color: #ffffff;
+ }
+
+.nav_selected {
+  background-color: white;
+}
+.nav_selected a:hover {
+   color: #0093D1 !important;
+ }
+
+.navicon-line {
+    width: 24px;
+    height: 4px;
+    border-radius: 1px;
+    margin-bottom: 3px;
+    background-color: #aaaaaa;
+}
+
+
+/*3. site content*/
+#sb-site {
+  position: relative;
+  margin-top: 50px;
+}
+
+.sb-site-content {
+  width: 80%;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn, .btn-sm {
+  margin-top: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-right: 5px;
+  padding-right: 5px;
+  font-size: 100%;
+}
+
+h3 {
+  margin-top: 0px;
+  padding: 10px;
+  padding-top: 0px;
+}
+
+div .left {
+  margin-right: 50px;
+}
+/*3.1 site common sections */
+
+.sb-site-content a, .sb-site-content a:hover, .sb-site-content a:visited {
+  color: #0093D1;
+}
+
+/*3.B site common articles */
+.sb-site-content article{
+  margin-bottom: 25px;
+  margin-top: 10px;
+  margin-left: ;
+  margin-right: auto;
+  background-color: #ffffff;  box-shadow: 1px 1px 12px #555;
+  padding: 5px;
+}
+
+
+
+/* table */
+th {
+  text-transform: uppercase;
+  align: center;
+}
+
+.oid_row {
+  vertical-align: top;
+}
+.oid_column_button {
+  width:10px !important;
+  padding: 0px !important;
+}
+.oid_tree_button {
+  padding: 0px !important;
+  border-width: 0px !important;
+}
+
+.oid_tree_data {
+  padding-bottom: 0px !important;
+  padding-top: 5px !important;
+  padding-right: 0px !important;
+}
+.oid_syntax {
+  text-decoration: underline;
+  color: #0093D1;
+  padding: 0px;
+  margin-top: 0px;
+  border-width: 0px;
+}
+
+/* detail bar at the bottom of tha page */
+#entry_detail {
+    min-height: 0px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-width: 1px 0;
+    position: fixed;   /* new */
+    bottom: 0;  /* new */
+    left: 0px;
+    width: 100%;  /* new */
+    background-color: #ffffff;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+}
