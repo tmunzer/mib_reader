@@ -25,16 +25,16 @@ SearchEngine.prototype.searchMib = function (text) {
     var score = 0;
     var oid_object;
     var text_splitted = text.split(' ');
-    for (var i in oid_list){
-        if (oid_list.hasOwnProperty(i)){
+    for (var i in oid_list) {
+        if (oid_list.hasOwnProperty(i)) {
             score = 0;
             oid_object = oid_list[i];
-            for (var j in text_splitted){
-                if (text_splitted.hasOwnProperty(j)){
+            for (var j in text_splitted) {
+                if (text_splitted.hasOwnProperty(j)) {
                     score += this.searchOidObject(text_splitted[j].trim(), oid_object);
                 }
             }
-            if (score > 0){
+            if (score > 0) {
                 result.push({oid: oid_object.getOid(), score: score});
             }
         }
@@ -75,37 +75,37 @@ SearchEngine.prototype.add_oid_object = function (oid_object) {
 SearchEngine.prototype.searchOidObject = function (text, oid_object) {
     var score = 0;
     var re = new RegExp(text, 'i');
-    var re_strict = new RegExp("(?:^| )"+text+"(?: |$)", 'i');
-    if (this.search_all || this.search_oid){
+    var re_strict = new RegExp("(?:^| )" + text + "(?: |$)", 'i');
+    if (this.search_all || this.search_oid) {
         if (oid_object.getOid() == text) {
             score += 15;
         } else if (oid_object.getOid().indexOf(text) >= 0) {
             score += 10;
         }
     }
-    if (this.search_all || this.search_name){
-        if (re_strict.test(oid_object.getName())){
+    if (this.search_all || this.search_name) {
+        if (re_strict.test(oid_object.getName())) {
             score += 15;
         } else if (re.test(oid_object.getName())) {
             score += 10;
         }
     }
     if (oid_object.getParam()) {
-        if (this.search_all || this.search_syntax){
+        if (this.search_all || this.search_syntax) {
             if (re.test(oid_object.getParam().syntax.getType())) {
                 score += 3;
             }
         }
 
-        if (this.search_all || this.search_description){
-            if (re_strict.test(oid_object.getParam().getDescription())){
+        if (this.search_all || this.search_description) {
+            if (re_strict.test(oid_object.getParam().getDescription())) {
                 score += 6;
             }
             else if (re.test(oid_object.getParam().getDescription())) {
                 score += 4;
             }
         }
-        if (this.search_all || this.search_index){
+        if (this.search_all || this.search_index) {
             if (re.test(oid_object.getParam().getIndex())) {
                 score += 3;
             }

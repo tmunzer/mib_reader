@@ -1,126 +1,128 @@
-
-
 /* ---------------
  * 003 - Slidebars
  */
 
 .sb-slidebar {
-	height: 100%;
-	overflow-y: auto; /* Enable vertical scrolling on Slidebars when needed. */
-	position: fixed;
-	top: 0;
-	z-index: 0; /* Slidebars sit behind sb-site. */
-	display: none; /* Initially hide the Slidebars. Changed from visibility to display to allow -webkit-overflow-scrolling. */
-	background-color: transparent; /* Default Slidebars background colour, overwrite this with your own css. */
+    height: 100%;
+    overflow-y: auto; /* Enable vertical scrolling on Slidebars when needed. */
+    position: fixed;
+    top: 0;
+    z-index: 0; /* Slidebars sit behind sb-site. */
+    display: none; /* Initially hide the Slidebars. Changed from visibility to display to allow -webkit-overflow-scrolling. */
+    background-color: transparent; /* Default Slidebars background colour, overwrite this with your own css. */
 }
 
 .sb-slidebar, .sb-slidebar * {
-	-webkit-transform: translateZ( 0px ); /* Fixes issues with translated and z-indexed elements on iOS 7. */
+    -webkit-transform: translateZ(0px); /* Fixes issues with translated and z-indexed elements on iOS 7. */
 }
 
-
 .sb-right {
-	right: 0; /* Set Slidebar to the right. */
+    right: 0; /* Set Slidebar to the right. */
 }
 
 html.sb-static .sb-slidebar,
 .sb-slidebar.sb-static {
-	position: absolute; /* Makes Slidebars scroll naturally with the site, and unfixes them for Android Browser < 3 and iOS < 5. */
+    position: absolute; /* Makes Slidebars scroll naturally with the site, and unfixes them for Android Browser < 3 and iOS < 5. */
 }
 
 .sb-slidebar.sb-active {
-	display: block; /* Makes Slidebars visibile when open. Changed from visibility to display to allow -webkit-overflow-scrolling. */
+    display: block; /* Makes Slidebars visibile when open. Changed from visibility to display to allow -webkit-overflow-scrolling. */
 }
 
 .sb-style-overlay {
-	z-index: 9999; /* Set z-index high to ensure it overlays any other site elements. */
+    z-index: 9999; /* Set z-index high to ensure it overlays any other site elements. */
 }
 
 .sb-momentum-scrolling {
-	-webkit-overflow-scrolling: touch; /* Adds native momentum scrolling for iOS & Android devices. */
+    -webkit-overflow-scrolling: touch; /* Adds native momentum scrolling for iOS & Android devices. */
 }
 
 /* Slidebar widths for browsers/devices that don't support media queries. */
-	.sb-slidebar {
-		width: 30%;
-	}
-	
-	.sb-width-thin {
-		width: 15%;
-	}
-	
-	.sb-width-wide {
-		width: 45%;
-	}
-
-@media (max-width: 480px) { /* Slidebar widths on extra small screens. */
-	.sb-slidebar {
-		width: 70%;
-	}
-	
-	.sb-width-thin {
-		width: 55%;
-	}
-	
-	.sb-width-wide {
-		width: 85%;
-	}
+.sb-slidebar {
+    width: 30%;
 }
 
-@media (min-width: 481px) { /* Slidebar widths on small screens. */
-	.sb-slidebar {
-		width: 55%;
-	}
-	
-	.sb-width-thin {
-		width: 40%;
-	}
-	
-	.sb-width-wide {
-		width: 70%;
-	}
+.sb-width-thin {
+    width: 15%;
 }
 
-@media (min-width: 768px) { /* Slidebar widths on medium screens. */
-	.sb-slidebar {
-		width: 40%;
-	}
-	
-	.sb-width-thin {
-		width: 25%;
-	}
-	
-	.sb-width-wide {
-		width: 55%;
-	}
+.sb-width-wide {
+    width: 45%;
 }
 
-@media (min-width: 992px) { /* Slidebar widths on large screens. */
-	.sb-slidebar {
-		width: 30%;
-	}
-	
-	.sb-width-thin {
-		width: 15%;
-	}
-	
-	.sb-width-wide {
-		width: 45%;
-	}
+@media (max-width: 480px) {
+    /* Slidebar widths on extra small screens. */
+    .sb-slidebar {
+        width: 70%;
+    }
+
+    .sb-width-thin {
+        width: 55%;
+    }
+
+    .sb-width-wide {
+        width: 85%;
+    }
 }
 
-@media (min-width: 1200px) { /* Slidebar widths on extra large screens. */
-	.sb-slidebar {
-		width: 15%;
-	}
-	
-	.sb-width-thin {
-		width: 5%;
-	}
-	
-	.sb-width-wide {
-		width: 35%;
-	}
+@media (min-width: 481px) {
+    /* Slidebar widths on small screens. */
+    .sb-slidebar {
+        width: 55%;
+    }
+
+    .sb-width-thin {
+        width: 40%;
+    }
+
+    .sb-width-wide {
+        width: 70%;
+    }
+}
+
+@media (min-width: 768px) {
+    /* Slidebar widths on medium screens. */
+    .sb-slidebar {
+        width: 40%;
+    }
+
+    .sb-width-thin {
+        width: 25%;
+    }
+
+    .sb-width-wide {
+        width: 55%;
+    }
+}
+
+@media (min-width: 992px) {
+    /* Slidebar widths on large screens. */
+    .sb-slidebar {
+        width: 30%;
+    }
+
+    .sb-width-thin {
+        width: 15%;
+    }
+
+    .sb-width-wide {
+        width: 45%;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Slidebar widths on extra large screens. */
+    .sb-slidebar {
+        width: 15%;
+    }
+
+    .sb-width-thin {
+        width: 5%;
+    }
+
+    .sb-width-wide {
+        width: 35%;
+    }
 }
 
 /* ---------------
@@ -128,24 +130,24 @@ html.sb-static .sb-slidebar,
  */
 
 .sb-slide, #sb-site, .sb-site-container, .sb-slidebar {
-	-webkit-transform: translate( 0px );
-	   -moz-transform: translate( 0px );
-	     -o-transform: translate( 0px );
-	        transform: translate( 0px );
-	
-	-webkit-transition: -webkit-transform 400ms ease;
-	   -moz-transition:    -moz-transform 400ms ease;
-	     -o-transition:      -o-transform 400ms ease;
-	        transition:         transform 400ms ease;
-	
-	-webkit-transition-property: -webkit-transform, left, right; /* Add left/right for Android < 4.4. */
-	-webkit-backface-visibility: hidden; /* Prevents flickering. This is non essential, and you may remove it if your having problems with fixed background images in Chrome. */
+    -webkit-transform: translate(0px);
+    -moz-transform: translate(0px);
+    -o-transform: translate(0px);
+    transform: translate(0px);
+
+    -webkit-transition: -webkit-transform 400ms ease;
+    -moz-transition: -moz-transform 400ms ease;
+    -o-transition: -o-transform 400ms ease;
+    transition: transform 400ms ease;
+
+    -webkit-transition-property: -webkit-transform, left, right; /* Add left/right for Android < 4.4. */
+    -webkit-backface-visibility: hidden; /* Prevents flickering. This is non essential, and you may remove it if your having problems with fixed background images in Chrome. */
 }
 
 /* --------------------
  * 005 - Helper Classes
  */
- 
-.sb-hide { 
-	display: none; /* Optionally applied to control classes when Slidebars is disabled over a certain width. */
+
+.sb-hide {
+    display: none; /* Optionally applied to control classes when Slidebars is disabled over a certain width. */
 }

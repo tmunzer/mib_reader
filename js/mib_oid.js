@@ -88,10 +88,10 @@ OidObject.prototype.getRow = function () {
                     + this.parameters.syntax.getType() + ' <i class="fa fa-info-circle"></i></a></br>';
             } else {
                 ds += '<strong>Syntax: </strong><span>' + this.parameters.syntax.getType() + '</span></br>';
-                if (this.parameters.syntax.getValues().length > 0){
+                if (this.parameters.syntax.getValues().length > 0) {
                     ds += "<ul>";
-                    for (var i in this.parameters.syntax.getValues()){
-                        if (this.parameters.syntax.getValues().hasOwnProperty(i)){
+                    for (var i in this.parameters.syntax.getValues()) {
+                        if (this.parameters.syntax.getValues().hasOwnProperty(i)) {
                             ds += "<li>" + this.parameters.syntax.getValues()[i] + "</li>";
                         }
                     }
@@ -132,19 +132,19 @@ OidObject.prototype.search_result = function (text, search_all, search_oid, sear
     var re_text = text.replace(" ", "|");
     re = new RegExp('(' + re_text + ')', "gi");
 
-    if (search_all || search_oid){
+    if (search_all || search_oid) {
         oid = oid.replace(re, "<strong>$1</strong>");
     }
-    if (search_all || search_name){
+    if (search_all || search_name) {
         oid_name = oid_name.replace(re, "<strong>$1</strong>");
     }
-    if (search_all ||search_syntax){
+    if (search_all || search_syntax) {
         oid_syntax = oid_syntax.replace(re, "<strong>$1</strong>");
     }
-    if (search_all || search_index){
+    if (search_all || search_index) {
         oid_index = oid_index.replace(re, "<strong>$1</strong>");
     }
-    if (search_all || search_description){
+    if (search_all || search_description) {
         oid_description = oid_description.replace(re, "<strong>$1</strong>");
     }
 

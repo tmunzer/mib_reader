@@ -16,7 +16,7 @@ function MibParser(fname, text) {
                 this.parse_moduleIdentity();
 //            } else if (/^END$/.test(this.line.trim())) {
 //                break;
-            } else if (!/^END$/.test(this.line.trim())){
+            } else if (!/^END$/.test(this.line.trim())) {
                 var name = null;
                 if (/^\w*$/.test(this.line.trim())) {
                     name = this.line.trim();
@@ -211,18 +211,18 @@ MibParser.prototype.parse_syntax = function () {
     var syntax = new Syntax();
     var stype = "";
     var values = [];
-    if (this.line.indexOf('{') >= 0){
+    if (this.line.indexOf('{') >= 0) {
         this.line = this.line.replace("SYNTAX", "").trim();
         stype = this.line.substring(0, this.line.indexOf('{')).trim();
         this.line = this.line.substring(this.line.indexOf('{') + 1).trim();
-        while (true){
+        while (true) {
             if (this.line.indexOf('}') < 0) {
-                if (/\w/.test(this.line)){
+                if (/\w/.test(this.line)) {
                     values.push(this.line.trim());
                 }
                 this.next_line();
             } else {
-                if (/\w/.test(this.line)){
+                if (/\w/.test(this.line)) {
                     values.push(this.line.replace('}', "").trim());
                 }
                 break;

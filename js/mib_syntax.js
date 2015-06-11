@@ -3,16 +3,16 @@ function Syntax() {
     this.values = [];
     this.mib = "";
 }
-Syntax.prototype.setType = function (stype){
+Syntax.prototype.setType = function (stype) {
     this.stype = stype;
 };
 Syntax.prototype.getType = function () {
     return this.stype;
 };
-Syntax.prototype.setValues = function(values){
+Syntax.prototype.setValues = function (values) {
     this.values = values;
 };
-Syntax.prototype.getValues = function (){
+Syntax.prototype.getValues = function () {
     return this.values;
 };
 Syntax.prototype.setMib = function (mib) {

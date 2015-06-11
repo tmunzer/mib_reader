@@ -42,7 +42,7 @@ function getOid(child_oid_object, oid_object) {
 
 function generateOid() {
     for (var i in oid_list) {
-        if (oid_list.hasOwnProperty(i)){
+        if (oid_list.hasOwnProperty(i)) {
             oid_list[i].setOid(getOid(null, oid_list[i]));
             oid_autocomplete.push(oid_list[i].getOid());
         }

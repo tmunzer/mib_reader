@@ -65,7 +65,7 @@ TextualConvention.prototype.display = function () {
     }
     ds += '<table id="table_' + this.getOid() + '" hidden="hidden" class="table table-condensed next_oid_table" style="margin: 0px;">';
     for (var i in this.childs) {
-        if (this.childs.hasOwnProperty(i)){
+        if (this.childs.hasOwnProperty(i)) {
             ds += this.childs[i].getRow();
         }
     }

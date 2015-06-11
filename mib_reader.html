@@ -12,17 +12,19 @@
     <script type='text/javascript' src='js/lib/bootstrap.min.js'></script>
     <script type='text/javascript' src='js/lib/slidebars.js'></script>
     <script type='text/javascript' src='js/lib/jquery.autocomplete.js'></script>
+    <script type='text/javascript' src='js/lib/FaviconAwesome.js'></script>
     <link rel="stylesheet" href="./css/slidebars.css" type="text/css">
     <link rel="stylesheet" href="./css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="./css/my.css" type="text/css">
+    <link rel="stylesheet" href="./css/mib_reader.css" type="text/css">
 </head>
 <body id="top">
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
+    <div class="container" style="width:80%" >
         <!-- Logo -->
-        <div id="logo" class="navbar-left">
-            <a href="#">MIB Preview</a>
+        <div id="logo" class="nav navbar-nav navbar-left" style="padding-top: 5px;">
+          <i class="fa fa-3x fa-connectdevelop"></i>
+          <a href="#">MIB Preview</a>
         </div>
         <!-- /#logo -->
 
@@ -60,7 +62,9 @@
         </ul>
     </div>
 </nav>
-<div style="min-height: 536px;" id="sb-site">
+<!-- main container -->
+<div  id="sb-site">
+  <!-- mib viewer - this section will display the article to load MIB files -->
     <section class="sb-site-content" id="mib_display_select">
         <article style="display: flex;">
             <div style="width: 40%">
@@ -73,10 +77,12 @@
             </div>
         </article>
     </section>
+  <!-- mib viewer - this section will display the MIB files details -->
     <section class="sb-site-content" id="mib_display_detail" hidden="hidden">
         <div id="mib_details">
         </div>
     </section>
+    <!-- mib viewer - this section will display MIB tree -->
     <section class="sb-site-content" id="mib_display_preview">
         <article style="display: flex">
             <div style="width: 50%;">
@@ -96,9 +102,19 @@
         <div id="mib_preview">
         </div>
     </section>
+  <!-- mib viewer - this section will display the About article -->
     <section class="sb-site-content" id="mib_about" hidden="hidden">
         <article>
             <h3>About</h3>
+            v1:
+            <ul>
+              <li>released under <a target="_blank" href="https://raw.githubusercontent.com/tmunzer/mib_reader/master/LICENSE">MIT license</a></li>
+              <li>fix display issue</li>
+            </ul>
+            v0.93:
+            <ul>
+              <li>library fix</li>
+            </ul>
             v0.92:
             <ul>
                 <li>parser fixes</li>
@@ -121,6 +137,7 @@
             </ul>
         </article>
     </section>
+  <!-- mib viewer - this section will display search tool -->
     <section class="sb-site-content" id="mib_display_search" hidden="hidden">
         <article style="display: flex">
             <div style="width: 50%;">
@@ -154,6 +171,7 @@
     </section>
 
 </div>
+  <!-- mib viewer - this is the right pane to display infos  -->
 <nav id="info_details" class="sb-slidebar sb-right sb-style-push">
     <div id="info_details_content" style="margin-top: 100px;">
     </div>
@@ -235,7 +253,7 @@
     }
 
     function display_next(oid) {
-     if (document.getElementById("table_" + oid).style.display == "none") {
+        if (document.getElementById("table_" + oid).style.display == "none") {
             document.getElementById("table_" + oid).style.display = 'table';
             document.getElementById("i_" + oid).className = "fa fa fa-minus-circle fa-lg";
         } else {
@@ -293,12 +311,12 @@
         if (tab_name == 'display_preview') {
             var oid = /[0-9.]+$/.exec(selector)[0];
             hide_all();
-            while (oid.indexOf('.') > 0){
+            while (oid.indexOf('.') > 0) {
                 oid = oid.substring(0, oid.lastIndexOf('.'));
-                target = $(document.getElementById('table_'+oid));
+                target = $(document.getElementById('table_' + oid));
                 if (target.length) {
-                        document.getElementById("table_" + oid).style.display = 'table';
-                        document.getElementById("i_" + oid).className = "fa fa fa-minus-circle fa-lg";
+                    document.getElementById("table_" + oid).style.display = 'table';
+                    document.getElementById("i_" + oid).className = "fa fa fa-minus-circle fa-lg";
                 }
             }
         }
@@ -310,5 +328,6 @@
         }
     }
 </script>
+<script> FaviconAwesome('fa-connectdevelop', '#0093D1'); </script>
 </body>
 </html>
