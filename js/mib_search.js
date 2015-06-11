@@ -46,7 +46,7 @@ SearchEngine.prototype.add_oid_object = function (oid_object) {
     if (oid_object.getParam()) {
         var odesc = oid_object.getDescription();
         for (var i in odesc) {
-            if (result.hasOwnProperty(i)) {
+            if (odesc.hasOwnProperty(i)) {
                 if ((odesc[i].length >= 3) && ($.grep(this.oid_search_object_description, function (e) {
                         return e == odesc[i];
                     }).length == 0 )) {
@@ -72,7 +72,7 @@ SearchEngine.prototype.search_oid_object = function (text, oid_object) {
         score += 5;
     }
     if (oid_object.getParam()) {
-        if (re.test(oid_object.getParam().getSyntax())) {
+        if (re.test(oid_object.getParam().syntax.getType())) {
             score += 3;
         }
         if (re.test(oid_object.getParam().getStatus())) {

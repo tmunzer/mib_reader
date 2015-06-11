@@ -75,19 +75,28 @@ OidObject.prototype.getRow = function () {
     if (this.parameters) {
         ds += '<td class="oid_tree_data">' + this.getOid() + '</br>'
             + '<strong>Name:</strong><span class="oid_name"> ' + this.getName() + '</span></br>';
-        if (this.parameters.getSyntax() != "") {
-            var syntax_name = this.parameters.getSyntax();
+        if (this.parameters.syntax.getType() != "") {
+            var syntax_type = this.parameters.syntax.getType();
             var syntax = $.grep(convention_list, function (e) {
-                return e.getName() == syntax_name;
+                return e.getName() == syntax_type;
             });
             if (syntax.length > 0) {
-                ds += '<strong>Syntax: </strong><a onclick="display_detail(\'TEXTUAL-CONVENTION\', \'' + syntax[0].getName() + '\')" class="btn oid_syntax">' + this.parameters.getSyntax() + '</a></br>';
+                ds += '<strong>Syntax: </strong><a onclick="display_detail(\'TEXTUAL-CONVENTION\', \'' + syntax[0].getName() + '\')" class="btn oid_syntax menu-link">' + this.parameters.syntax.getType() + '</a></br>';
             } else {
-                ds += '<strong>Syntax: </strong><span>' + this.parameters.getSyntax() + '</span></br>';
+                ds += '<strong>Syntax: </strong><span>' + this.parameters.syntax.getType() + '</span></br>';
+                if (this.parameters.syntax.getValues().length > 0){
+                    ds += "<ul>";
+                    for (var i in this.parameters.syntax.getValues()){
+                        if (this.parameters.syntax.getValues().hasOwnProperty(i)){
+                            ds += "<li>" + this.parameters.syntax.getValues()[i] + "</li>";
+                        }
+                    }
+                    ds += "</ul>";
+                }
             }
         }
         if (this.parameters.getIndex() != "") {
-            ds += '<strong>Name:</strong><span class="oid_index"> ' + this.parameters.getIndex() + '</span></br>';
+            ds += '<strong>Index:</strong><span class="oid_index"> ' + this.parameters.getIndex() + '</span></br>';
         }
         ds += '<strong>Description:</strong><span class="oid_description"> ' + this.parameters.getDescription() + '</span>'
     } else {
@@ -112,16 +121,16 @@ OidObject.prototype.search_result = function (text) {
     var ds = "<article style='padding-top:0;'><h5>"
         + oid + ': <span class="oid_name"> ' + oid_name + ' </span>';
     if (this.parameters) {
-        if (this.parameters.getSyntax() != "") {
-            var syntax_name = this.parameters.getSyntax();
+        if (this.parameters.syntax.getType() != "") {
+            var syntax_type = this.parameters.syntax.getType();
             var syntax = $.grep(convention_list, function (e) {
-                return e.getName() == syntax_name;
+                return e.getName() == syntax_type;
             });
             if (syntax.length > 0) {
-                var oid_syntax = this.parameters.getSyntax().replace(re, "<strong>$1</strong>");
+                var oid_syntax = this.parameters.syntax.getType().replace(re, "<strong>$1</strong>");
                 ds += ' (<a onclick="display_detail(\'TEXTUAL-CONVENTION\', \'' + syntax[0].getName() + '\')" class="btn oid_syntax">' + oid_syntax + '</a>)</h5>';
             } else {
-                ds += ' (<span>' + this.parameters.getSyntax() + '</span>)</h5>';
+                ds += ' (<span>' + this.parameters.syntax.getType() + '</span>)</h5>';
             }
         }
         var oid_description = this.parameters.getDescription().replace(re, "<strong>$1</strong>");
@@ -132,7 +141,7 @@ OidObject.prototype.search_result = function (text) {
 };
 
 function OidObjectParam() {
-    this.syntax = "";
+    this.syntax = new Syntax();
     this.access = "";
     this.ostatus = "";
     this.odescription = "";
@@ -140,12 +149,6 @@ function OidObjectParam() {
 }
 
 
-OidObjectParam.prototype.setSyntax = function (syntax) {
-    this.syntax = syntax;
-};
-OidObjectParam.prototype.getSyntax = function () {
-    return this.syntax;
-};
 OidObjectParam.prototype.setAccess = function (access) {
     this.access = access;
 };

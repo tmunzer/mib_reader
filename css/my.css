@@ -1,8 +1,19 @@
 body {
     font-family: Century Gothic;
+    font-size: 12px;
     background-color: #fafafa;
 }
 
+.panel {
+    position: fixed;
+    background-color: transparent;
+    right: -15.625em; /*left or right and the width of your navigation panel*/
+    width: 15.625em; /*should match the above value*/
+}
+
+hr {
+    margin: 10px 10px ;
+}
 /*1. Top Nav bar */
 
 .navbar-fixed-top {

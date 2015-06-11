@@ -8,14 +8,16 @@
 
     <title>MIB Preview</title>
     <!-- JQuery -->
-    <script type='text/javascript' src='js/jquery-2.1.1.min.js'></script>
-    <script type='text/javascript' src='js/bootstrap.min.js'></script>
+    <script type='text/javascript' src='js/lib/jquery-2.1.1.min.js'></script>
+    <script type='text/javascript' src='js/lib/bootstrap.min.js'></script>
+    <script type='text/javascript' src='js/lib/slidebars.js'></script>
+    <link rel="stylesheet" href="./css/slidebars.css" type="text/css">
     <link rel="stylesheet" href="./css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="./css/my.css" type="text/css">
 </head>
 <body id="top">
-<nav class="navbar navbar-default navbar-fixed-top sb-slide" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <!-- Logo -->
         <div id="logo" class="navbar-left">
@@ -24,18 +26,17 @@
         <!-- /#logo -->
 
         <!-- Menu -->
-
         <ul class="nav navbar-nav navbar-right">
-            <li id="nav_display_search">
-                <a href="#" onclick="select_tab('display_search')">
-                    <i class="fa fa-search fa-lg"></i>
-                    <span> MIB Search</span>
-                </a>
-            </li>
             <li id="nav_display_preview">
                 <a href="#" onclick="select_tab('display_preview')">
                     <i class="fa fa-list fa-lg"></i>
                     <span> MIB Preview</span>
+                </a>
+            </li>
+            <li id="nav_display_search">
+                <a href="#" onclick="select_tab('display_search')">
+                    <i class="fa fa-search fa-lg"></i>
+                    <span> MIB Search</span>
                 </a>
             </li>
             <li id="nav_display_detail">
@@ -66,33 +67,37 @@
     </section>
     <section class="sb-site-content" id="mib_display_detail" hidden="hidden">
         <h3>MIBs Details</h3>
-
         <div id="mib_details">
         </div>
     </section>
     <section class="sb-site-content" id="mib_display_preview">
         <h3>MIBs Preview - <span id="entries_number">0</span> OID(s) loaded</h3>
-        <a href="#" onclick="show_all()" style="float:right"><i class="fa fa-expand"></i> Show all </a><br/>
+        <a href="#" onclick="show_all()" style="float:right"><i class="fa fa-expand"></i> Show all </a><br>
         <a href="#" onclick="hide_all()" style="float:right"><i class="fa fa-compress"></i> Hide all </a>
-
         <div id="mib_preview">
-        </div>
-        <div id="entry_detail" hidden="hidden">
         </div>
     </section>
     <section class="sb-site-content" id="mib_about" hidden="hidden">
         <article>
             <h3>About</h3>
-            v0.9:
-            <ul>
-                <li>initial release</li>
-            </ul>
             v0.91:
             <ul>
                 <li>
                     fix issues on the research tool
+                </li>
+                <li>
                     fix issues on hide/display mib preview
                 </li>
+                <li>
+                    fix parser issues
+                </li>
+                <li>
+                    improve UI
+                </li>
+            </ul>
+            v0.9:
+            <ul>
+                <li>initial release</li>
             </ul>
         </article>
     </section>
@@ -109,7 +114,17 @@
         <div id='mib_search'>
         </div>
     </section>
+
 </div>
+<nav id="info_details" class="sb-slidebar sb-right sb-style-push">
+    <div id="info_details_content" style="margin-top: 100px;">
+    </div>
+    <div>
+    <a class='btn menu-link' id="sb-close" style='float: right; padding-right: 10px; padding-top: 10px;'>Close <i class='fa fa-times-circle'></i></a>
+    </div>
+</nav>
+<script type='text/javascript' src='js/mib_misc_obj.js'></script>
+<script type='text/javascript' src='js/mib_syntax.js'></script>
 <script type='text/javascript' src='js/mib_mib.js'></script>
 <script type='text/javascript' src='js/mib_oid.js'></script>
 <script type='text/javascript' src='js/mib_convention.js'></script>
@@ -119,9 +134,10 @@
 <script type='text/javascript' src='js/mib_list.js'></script>
 
 <script>
+    var mySlidebars = new $.slidebars();
 
     window.onload = function () {
-        select_tab("display_search");
+        select_tab("display_preview");
         $('#fileInput').change(function (e) {
             var files = fileInput.files;
             countdown = files.length;
@@ -150,6 +166,12 @@
         });
     };
 
+    $(document).ready(function() {
+        $('#sb-close').on("click", function(){
+            mySlidebars.slidebars.close();
+        })
+    });
+
     function enterKey(e) {
         if (e.keyCode == 13) {
             display_mib_search();
@@ -169,23 +191,33 @@
     function display_detail(mib_type, object_name) {
         var ds = "";
         if (mib_type == "TEXTUAL-CONVENTION") {
-            var syntax = $.grep(convention_list, function (e) {
+            var convention = $.grep(convention_list, function (e) {
                 return e.getName() == object_name;
             });
-            syntax = syntax[0];
-            ds = "<h4>TEXTUAL CONVENTION</h4>"
-                    + "<a class='btn' onclick='hide_detail()' style='float: right; padding-right: 10px; padding-top: 10px;'>Close <i class='fa fa-times-circle'></i></a>"
-                    + "<div style='display: flex;'>"
-                    + "<div style='width:50%;'>"
-                    + "<strong>Name: </strong>" + syntax.getName() + "</br>"
-                    + "<strong>Display Hint: </strong>" + syntax.getHint() + "</br>"
-                    + "<strong>Status: </strong>" + syntax.getStatus()
-                    + "</div><div style='width:50%;'>"
-                    + "<strong>Syntax: </strong>" + syntax.getSyntax() + "</br>"
-                    + "<strong>Description: </strong>" + syntax.getDescription()
+            convention = convention[0];
+            ds = "<h4>" + convention.getName() + "</h4>"
+                    + "<strong>Type: </strong><br>TEXTUAL CONVENTION<hr>"
+                    + "<strong>Display Hint: </strong><br>" + convention.getHint() + "<hr>"
+                    + "<strong>Status: </strong><br>" + convention.getStatus() + "<hr>"
+                    + "<strong>Syntax: </strong><br>" + convention.syntax.getType() + "<br>";
+            if (convention.syntax.getValues().length > 0) {
+                ds += "<ul>";
+                for (var i in convention.syntax.getValues()) {
+                    if (convention.syntax.getValues().hasOwnProperty(i)) {
+                        ds += "<li>" + convention.syntax.getValues()[i] + "</li>";
+                    }
+                }
+            }
+            ds += "</ul><hr>";
+            ds += "<strong>Description: </strong><br>" + convention.getDescription()
                     + "</div>";
         }
-        $("#entry_detail").html(ds).show();
+
+        $("#info_details_content").html(ds).show();
+        if (mySlidebars.slidebars.active('right')){
+
+        }
+        mySlidebars.slidebars.open('right');
     }
     function hide_detail() {
         $('#entry_detail').hide();

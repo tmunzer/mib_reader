@@ -1,8 +1,3 @@
-function import_mibs(import_name, mib) {
-    this.import_name = import_name;
-    this.mib = mib;
-}
-
 function Mib(fname) {
     this.file_name = fname;
     this.mib_name = "";
@@ -37,16 +32,5 @@ Mib.prototype.displayMibDetails = function () {
         ds += "<tr><td>" + this.import_mibs[i].import_name + "</td><td>" + this.import_mibs[i].mib + "</td></tr>";
     }
     ds += "</tbody></table></div></div></article>";
-    return ds;
-};
-
-//TODO: remove if not used
-Mib.prototype.displayMibOid = function () {
-    var ds = "";
-    for (var i in this.oid_object) {
-        if (this.oid_object[i].root) {
-            ds += this.oid_object[i].getRow();
-        }
-    }
     return ds;
 };

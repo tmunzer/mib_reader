@@ -2,7 +2,7 @@ function TextualConvention() {
     this.mib = "";
     this.oname = "";
     this.hint = "";
-    this.syntax = "";
+    this.syntax = new Syntax();
     this.ostatus = "";
     this.odescription = "";
 }
@@ -18,12 +18,6 @@ TextualConvention.prototype.setHint = function (hint) {
 TextualConvention.prototype.getHint = function () {
     return this.hint;
 };
-TextualConvention.prototype.setSyntax = function (syntax) {
-    this.syntax = syntax;
-};
-TextualConvention.prototype.getSyntax = function () {
-    return this.syntax;
-};
 TextualConvention.prototype.setStatus = function (ostatus) {
     this.ostatus = ostatus;
 };
@@ -32,9 +26,6 @@ TextualConvention.prototype.getStatus = function () {
 };
 TextualConvention.prototype.setDescription = function (odescription) {
     this.odescription = odescription.replace(/"/g, "");
-};
-TextualConvention.prototype.addDescription = function (odescription) {
-    this.odescription += " " + odescription.replace(/"/g, "");
 };
 TextualConvention.prototype.getDescription = function () {
     return this.odescription;

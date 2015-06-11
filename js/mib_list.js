@@ -46,11 +46,6 @@ function generateOid() {
     }
 }
 
-function import_mibs(import_name, mib) {
-    this.import_name = import_name;
-    this.mib = mib;
-}
-
 function Sequence(sequence_name, sequence_objects) {
     this.sequence_name = sequence_name;
     this.sequence_objects = sequence_objects;
